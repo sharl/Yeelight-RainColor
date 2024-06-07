@@ -3,6 +3,7 @@ import os
 import time
 import io
 import threading
+import tomllib
 
 import schedule
 from pystray import Icon, Menu, MenuItem
@@ -40,17 +41,18 @@ class taskTray:
 
     def readConf(self):
         home = os.environ.get('HOME', '.')
-        with open(f'{home}/.location') as fd:
-            self.base = fd.read().strip().split('?')
-
-        self.bulb = Bulb('192.168.0.220')
+        with open(f'{home}/.yeelight-raincolor', 'rb') as fd:
+            data = tomllib.load(fd)
+            self.base = data.get('location', '').strip().split('?')
+            self.bulb = Bulb(data.get('bulb'))
+            self.rgb = data.get('rgb')
 
     def doTask(self):
         r, g, b = self.getRGB()
-        THRESHOLD = 240
-        print(r, g, b)
+        rgb = f'{r} {g} {b}'
+        print(rgb, self.rgb)
 
-        if r >= THRESHOLD and g >= THRESHOLD and b >= THRESHOLD:
+        if rgb == self.rgb:
             self.bulb.turn_off()
             self.draw.rectangle((0, 0, 31, 31), fill=BLACK, outline=WHITE)
         else:
@@ -58,7 +60,7 @@ class taskTray:
             self.bulb.turn_on()
             self.bulb.set_rgb(r, g, b)
 
-        self.app.title = NAME + f' - {r} {g} {b}'
+        self.app.title = f'{NAME} - {rgb}'
         self.app.icon = self.image
         self.app.update_menu()
 
