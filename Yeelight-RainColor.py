@@ -54,7 +54,7 @@ class taskTray:
         rgb = f'{r} {g} {b}'
         print(rgb, self.rgb)
 
-        if rgb == self.rgb:
+        if rgb == self.rgb or rgb == BLACK:
             self.bulb.turn_off()
             self.draw.rectangle((0, 0, 31, 31), fill=BLACK, outline=WHITE)
         else:
