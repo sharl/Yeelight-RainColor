@@ -4,6 +4,7 @@ import time
 import io
 import threading
 import tomllib
+import webbrowser
 
 import schedule
 from pystray import Icon, Menu, MenuItem
@@ -27,6 +28,7 @@ class taskTray:
         self.readConf()
 
         item = []
+        item.append(MenuItem('Open', self.doOpen, default=True, visible=False))
         item.append(MenuItem('Check', self.doTask))
         item.append(MenuItem('Reload', self.readConf))
         item.append(MenuItem('Exit', self.stopApp))
@@ -63,6 +65,10 @@ class taskTray:
         self.app.title = f'{NAME} - {rgb}'
         self.app.icon = self.image
         self.app.update_menu()
+
+    def doOpen(self):
+        url = '?'.join(self.base)
+        webbrowser.open(url)
 
     def stopApp(self):
         self.running = False
