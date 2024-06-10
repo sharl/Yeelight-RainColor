@@ -1,0 +1,5 @@
+schedule
+pystray
+requests
+bs4
+yeelight
