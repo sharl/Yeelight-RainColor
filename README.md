@@ -1,3 +1,34 @@
 # Yeelight-RainColor
 
 Yahoo 雨雲レーダー画像を取得して降水量の色を Yeelight の RGB ランプに反映
+
+## Run
+
+```
+git clone https://github.com/sharl/Yeelight-RainColor.git
+cd Yeelight-RainColor
+pip install -r requirements.txt
+python Yeelight-RainColor.py
+```
+
+## .yeelight-raincolor
+
+```
+location = "https://weather.yahoo.co.jp/weather/zoomradar/?lat=42.923&lon=143.193&z=12"
+bulb = "192.168.0.204"
+rgb = "252 252 248"
+```
+
+### location
+
+緯度・経度・拡大率が含まれている [雨雲レーダー](https://weather.yahoo.co.jp/weather/zoomradar/) の URL
+
+### bulb
+
+Yeelight RGB デバイスの IP アドレス
+
+### rgb
+
+雨が降っていないときの観測地点の色
+
+この色と異なる場合に RGB デバイスが点灯
