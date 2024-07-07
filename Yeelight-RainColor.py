@@ -54,13 +54,16 @@ class taskTray:
         rgb = f'{r} {g} {b}'
         print(rgb, self.rgb)
 
-        if rgb == self.rgb or rgb == BLACK:
-            self.bulb.turn_off()
-            self.draw.rectangle((0, 0, 31, 31), fill=BLACK, outline=WHITE)
-        else:
-            self.draw.rectangle((0, 0, 31, 31), fill=(r, g, b), outline=WHITE)
-            self.bulb.turn_on()
-            self.bulb.set_rgb(r, g, b)
+        try:
+            if rgb == self.rgb or rgb == BLACK:
+                self.bulb.turn_off()
+                self.draw.rectangle((0, 0, 31, 31), fill=BLACK, outline=WHITE)
+            else:
+                self.draw.rectangle((0, 0, 31, 31), fill=(r, g, b), outline=WHITE)
+                self.bulb.turn_on()
+                self.bulb.set_rgb(r, g, b)
+        except Exception as e:
+            print(e)
 
         self.app.title = f'{NAME} - {rgb}'
         self.app.icon = self.image
