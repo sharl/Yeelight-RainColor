@@ -11,7 +11,8 @@ from pystray import Icon, Menu, MenuItem
 from PIL import Image, ImageDraw
 import requests
 from bs4 import BeautifulSoup
-from yeelight import Bulb
+import netifaces as netif
+from yeelight import discover_bulbs, Bulb
 
 NAME = 'Yeelight Rain Color'
 
@@ -20,14 +21,26 @@ BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
 
 
+def get_interface_name(addr):
+    netifs = netif.interfaces()
+    for name in netifs:
+        nameif = netif.ifaddresses(name)
+        for key in nameif:
+            ifaddr = nameif[key][0]
+            if addr == ifaddr.get('broadcast'):
+                return name
+    return None
+
+
 class taskTray:
     def __init__(self):
         self.running = False
         self.base = []
+        self.bulbs = []
+        item = []
 
         self.readConf()
 
-        item = []
         item.append(MenuItem('Open', self.doOpen, default=True, visible=False))
         item.append(MenuItem('Check', self.doTask))
         item.append(MenuItem('Reload', self.readConf))
@@ -42,12 +55,25 @@ class taskTray:
         self.doTask()
 
     def readConf(self):
+        self.bulbs = []
+
         home = os.environ.get('HOME', '.')
         with open(f'{home}/.yeelight-raincolor', 'rb') as fd:
             data = tomllib.load(fd)
             self.base = data.get('location', '').strip().split('?')
-            self.bulb = Bulb(data.get('bulb'))
+            self.bulb = data.get('bulb')
+            self.broadcast = data.get('broadcast')
             self.rgb = data.get('rgb')
+
+        if self.bulb:
+            for bulb_ip in self.bulb.split():
+                self.bulbs.append(Bulb(bulb_ip))
+
+        elif self.broadcast:
+            interface = get_interface_name(self.broadcast)
+            bulbs = discover_bulbs(interface=interface)
+            for bulb in bulbs:
+                self.bulbs.append(Bulb(bulb['ip']))
 
     def doTask(self):
         r, g, b = self.getRGB()
@@ -56,12 +82,14 @@ class taskTray:
 
         try:
             if rgb == self.rgb or rgb == BLACK:
-                self.bulb.turn_off()
+                for bulb in self.bulbs:
+                    bulb.turn_off()
                 self.draw.rectangle((0, 0, 31, 31), fill=BLACK, outline=WHITE)
             else:
                 self.draw.rectangle((0, 0, 31, 31), fill=(r, g, b), outline=WHITE)
-                self.bulb.turn_on()
-                self.bulb.set_rgb(r, g, b)
+                for bulb in self.bulbs:
+                    bulb.turn_on()
+                    bulb.set_rgb(r, g, b)
         except Exception as e:
             print(e)
 
