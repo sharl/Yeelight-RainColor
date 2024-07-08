@@ -15,7 +15,8 @@ python Yeelight-RainColor.py
 
 ```
 location = "https://weather.yahoo.co.jp/weather/zoomradar/?lat=42.923&lon=143.193&z=12"
-bulb = "192.168.0.204"
+bulb = "192.168.0.204 192.168.0.220"
+# broadcast = "192.168.0.255"
 rgb = "252 252 248"
 ```
 
@@ -25,7 +26,11 @@ rgb = "252 252 248"
 
 ### bulb
 
-Yeelight RGB デバイスの IP アドレス
+Yeelight RGB デバイスの IP アドレス 空白区切りで複数指定可能
+
+### broadcast
+
+対象ネットワークのすべての Yeelight RGB デバイスを使用
 
 ### rgb
 
