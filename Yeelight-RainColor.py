@@ -37,10 +37,13 @@ class taskTray:
         self.running = False
         self.base = []
         self.bulbs = []
+        self.rainsnow = False
         item = []
 
         self.readConf()
 
+        item.append(MenuItem('Snow?', self.toggleRainSnow, checked=lambda _: self.rainsnow))
+        item.append(Menu.SEPARATOR)
         item.append(MenuItem('Open', self.doOpen, default=True, visible=False))
         item.append(MenuItem('Check', self.doTask))
         item.append(MenuItem('Reload', self.readConf))
@@ -97,6 +100,10 @@ class taskTray:
         self.app.icon = self.image
         self.app.update_menu()
 
+    def toggleRainSnow(self):
+        self.rainsnow = not self.rainsnow
+        self.doTask()
+
     def doOpen(self):
         url = '?'.join(self.base)
         webbrowser.open(url)
@@ -121,7 +128,7 @@ class taskTray:
         self.app.run()
 
     def getRGB(self):
-        base_url = f'{self.base[0]}?{self.base[1]}'
+        base_url = f'{self.base[0]}{"rainsnow/" if self.rainsnow else ""}?{self.base[1]}'
         r = requests.get(base_url)
         if r and r.status_code == 200:
             soup = BeautifulSoup(r.content, 'html.parser')
