@@ -105,7 +105,7 @@ class taskTray:
         self.doTask()
 
     def doOpen(self):
-        url = '?'.join(self.base)
+        url = f'{self.base[0]}{"rainsnow/" if self.rainsnow else ""}?{self.base[1]}'
         webbrowser.open(url)
 
     def stopApp(self):
