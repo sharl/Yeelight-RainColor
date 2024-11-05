@@ -13,6 +13,7 @@ import requests
 from bs4 import BeautifulSoup
 import netifaces as netif
 from yeelight import discover_bulbs, Bulb
+from isSnowy import isSnowy
 
 NAME = 'Yeelight Rain Color'
 
@@ -41,6 +42,14 @@ class taskTray:
         item = []
 
         self.readConf()
+
+        lat, lng = None, None
+        for w in self.base[1].split('&'):
+            if w.startswith('lat='):
+                lat = float(w.replace('lat=', ''))
+            elif w.startswith('lon='):
+                lng = float(w.replace('lon=', ''))
+        self.rainsnow = isSnowy(lat, lng)
 
         item.append(MenuItem('Snow?', self.toggleRainSnow, checked=lambda _: self.rainsnow))
         item.append(Menu.SEPARATOR)
