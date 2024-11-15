@@ -102,6 +102,7 @@ class taskTray:
                 for bulb in self.bulbs:
                     bulb.turn_on()
                     bulb.set_rgb(r, g, b)
+                    bulb.set_brightness(1)
         except Exception as e:
             print(e)
 
