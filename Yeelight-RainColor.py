@@ -20,6 +20,7 @@ NAME = 'Yeelight Rain Color'
 INTERVAL = 5 * 60
 BLACK = (0, 0, 0)
 WHITE = (255, 255, 255)
+RED = (255, 0, 0)
 
 
 def get_interface_name(addr):
@@ -96,7 +97,7 @@ class taskTray:
             if rgb == self.rgb or (r, g, b) == BLACK:
                 for bulb in self.bulbs:
                     bulb.turn_off()
-                self.draw.rectangle((0, 0, 31, 31), fill=BLACK, outline=WHITE)
+                self.draw.rectangle((0, 0, 31, 31), fill=BLACK, outline=WHITE if rgb == self.rgb else RED)
             else:
                 self.draw.rectangle((0, 0, 31, 31), fill=(r, g, b), outline=WHITE)
                 for bulb in self.bulbs:
