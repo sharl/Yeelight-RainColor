@@ -93,7 +93,7 @@ class taskTray:
         print(rgb, self.rgb)
 
         try:
-            if rgb == self.rgb or rgb == BLACK:
+            if rgb == self.rgb or (r, g, b) == BLACK:
                 for bulb in self.bulbs:
                     bulb.turn_off()
                 self.draw.rectangle((0, 0, 31, 31), fill=BLACK, outline=WHITE)
